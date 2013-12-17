@@ -1,30 +1,35 @@
-<?php 
+<?
+
 class AstMan {
 
-	var $socket;
-	var $error;
+	protected $socket;
+	protected $error;
+	protected $amiHost = "10.1.1.181";
+	protected $amiPort = "5038";
+	protected $amiUsername = "admin";
+	protected $amiPassword = "admin";
 	
 	function AstMan() {
-		$this -> socket = FALSE;
+		$this -> socket = false;
 		$this -> error = "";
 	} 
 
-	function Login($host, $username="admin", $password="admin") {
+	function Login() {
 		
-		$this -> socket = @fsockopen($host,"5038", $errno, $errstr, 1); 
+		$this -> socket = @fsockopen($amiHost,$amiPort, $errno, $errstr, 1); 
 		if (!$this -> socket) {
-			$this -> error =  "Could not connect - $errstr ($errno)";
-			return FALSE;
+			$this -> error =  "Could not connect: $errstr ($errno)";
+			return false;
 		}else{
 			stream_set_timeout($this -> socket, 1); 
-			$wrets = $this -> Query("Action: Login\r\nUserName: $username\r\nSecret: $password\r\nEvents: off\r\n\r\n"); 
-			if (strpos($wrets, "Message: Authentication accepted") != FALSE) {
+			$wrets = $this -> Query("Action: Login\r\nUserName: $amiUsername\r\nSecret: $amiPassword\r\nEvents: off\r\n\r\n"); 
+			if (strpos($wrets, "Message: Authentication accepted") != false) {
 				return true;
 			}else{
-				$this -> error = "Could not login - Authentication failed";
+				$this -> error = "Could not login: Authentication failed.";
 				fclose($this -> socket); 
-				$this -> socket = FALSE;
-				return FALSE;
+				$this -> socket = false;
+				return false;
 			}
 		}
 	}
@@ -36,22 +41,23 @@ class AstMan {
 				$wrets .= fread($this -> socket, 8192); 
 			} 
 			fclose($this -> socket); 
-			$this -> socket = "FALSE";
+			$this -> socket = false;
 		}
 		return; 
 	}
 	
 	function Query($query) {
 		$wrets = "";
-		if ($this -> socket === FALSE) {
-			return FALSE;
+		if ($this -> socket === false) {
+			$this -> error = "No connection.";
+			return false;
 		}	
 		fputs($this -> socket, $query); 
 		do {
 			$line = fgets($this -> socket, 4096);
-			$wrets .= '<br>'.$line;
+			$wrets .= "<br>".$line;
 			$info = stream_get_meta_data($this -> socket);
-		} while ($line != "\r\n" && $info['timed_out'] == false );
+		} while ($line != "\r\n" && $info["timed_out"] == false );
 		return $wrets;
 	}
 
@@ -59,8 +65,9 @@ class AstMan {
 		$query = "Action: Command\r\nCommand: Reload\r\n\r\n";
 		$wrets = "";
 		
-		if ($this -> socket === FALSE) {
-			return FALSE;
+		if ($this -> socket === false) {
+			$this -> error = "No connection.";
+			return false;
 		}
 			
 		fputs($this -> socket, $query); 
@@ -69,7 +76,7 @@ class AstMan {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= $line;
 			$info = stream_get_meta_data($this -> socket);
-		}while ($line != "\r\n" && $info['timed_out'] == false );
+		}while ($line != "\r\n" && $info["timed_out"] == false );
 		return $wrets;
 	}
 
@@ -77,8 +84,9 @@ class AstMan {
 		$query = "Action: SIPpeers\r\n\r\n";
 		$wrets = "";
 		
-		if ($this -> socket === FALSE) {
-			return FALSE;
+		if ($this -> socket === false) {
+			$this -> error = "No connection.";
+			return false;
 		}
 			
 		fputs($this -> socket, $query); 
@@ -87,18 +95,18 @@ class AstMan {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= $line;
 			$info = stream_get_meta_data($this -> socket);
-		} while ($line != "Event: PeerlistComplete\r\n" && $info['timed_out'] == false );
+		} while ($line != "Event: PeerlistComplete\r\n" && $info["timed_out"] == false );
 		return $wrets;
 	}
 
 	function AddUser($user,$type,$dir) {
 		if ($user && $type && $dir) {
-			$file = fopen($dir, 'a+');
+			$file = fopen($dir, "a+");
 			switch ($type) {
-				case 'webrtc':
+				case "webrtc":
 					$str = "[".$user."]\n type=peer\n username=".$user."\n host=dynamic\n secret=".$user."\n context=default\n hasiax = no\n hassip = yes\n encryption = yes\n avpf = yes\n icesupport = yes\n videosupport=no\n directmedia=no\n nat=yes\n qualify=yes\n\n";
 					break;
-				case 'sip':
+				case "sip":
 					$str = "[".$user."]\n type=peer\n username=".$user."\n host=dynamic\n secret=".$user."\n context=default\n hasiax = no\n hassip = yes\n nat=yes\n\n";
 					break;
 			}
@@ -113,7 +121,7 @@ class AstMan {
 
 	function AddExtension($user,$dir) {
 		if ($user && $dir) {
-			$file = fopen($dir, 'a+');
+			$file = fopen($dir, "a+");
 			$str = "exten => ".$user.",1,Dial(SIP/".$user.")\n";
 			fwrite($file, $str);
 			fclose($file);
@@ -128,4 +136,5 @@ class AstMan {
 		return $this -> error;
 	}
 }
+
 ?> 
