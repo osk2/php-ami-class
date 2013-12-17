@@ -36,7 +36,7 @@ class AstMan {
 				$wrets .= fread($this -> socket, 8192); 
 			} 
 			fclose($this -> socket); 
-			$this -> socket = "FALSE";
+			$this -> socket = FALSE;
 		}
 		return; 
 	}
