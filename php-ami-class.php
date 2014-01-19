@@ -25,7 +25,7 @@ class AstMan {
 			$amiUsername = $this -> amiUsername;
 			$amiPassword = $this -> amiPassword;
 			$wrets = $this -> Query("Action: Login\r\nUserName: $amiUsername\r\nSecret: $amiPassword\r\nEvents: off\r\n\r\n");
-			if (strpos($wrets, "Message: Authentication accepted") != false) {
+			if (strpos($wrets, "Message: Authentication accepted") !== false) {
 				return true;
 			}else{
 				$this -> error = "Could not login: Authentication failed.";
@@ -59,7 +59,7 @@ class AstMan {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= "<br>".$line;
 			$info = stream_get_meta_data($this -> socket);
-		} while ($line != "\r\n" && $info["timed_out"] == false );
+		} while ($line != "\r\n" && $info["timed_out"] === false );
 		return $wrets;
 	}
 
@@ -78,7 +78,7 @@ class AstMan {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= $line;
 			$info = stream_get_meta_data($this -> socket);
-		}while ($line != "\r\n" && $info["timed_out"] == false );
+		}while ($line != "\r\n" && $info["timed_out"] === false );
 		return $wrets;
 	}
 
@@ -97,7 +97,7 @@ class AstMan {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= $line;
 			$info = stream_get_meta_data($this -> socket);
-		} while ($line != "Event: PeerlistComplete\r\n" && $info["timed_out"] == false );
+		} while ($line != "Event: PeerlistComplete\r\n" && $info["timed_out"] === false );
 		return $wrets;
 	}
 

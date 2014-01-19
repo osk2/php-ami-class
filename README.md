@@ -14,21 +14,24 @@ Functions
  - `Logout()`
  
  - `Query($query)`
- 
-    - $query : Command string to query e.g. `Action: SIPpeers\r\n\r\n`
+
+    - $query : Command string to query. e.g. `Action: SIPpeers\r\n\r\n`
+
 
  - `Reload()`
  
  - `GetUsers()`
  
- - `AddUser($user,$type,$dir)`
+ - `AddUser($user, $type, $dir)`
  
     - $user : Username to create
-    - $type : Account type (`webrtc` or `sip`)
+
+    - $type : User type (`webrtc` or `sip`)
+
     - $dir : Path to `users.conf`
 
 
- - `AddExtension($user,$dir)`
+ - `AddExtension($user, $dir)`
     
     - $user : Username to create
     - $dir : Path to `extensions.conf`
@@ -43,11 +46,9 @@ Basic Usage
     $conn = new AstMan;
 	$conn -> amiHost = 'AMI_HOST_IP_HERE';
 	$conn -> amiPort = 'AMI_PORT_HERE';
-		//default port is '5038'.
 	$conn -> amiUsername = 'AMI_USERNAME_HERE'; 
-		//default username is 'admin'.
 	$conn -> amiPassword = 'AMI_PASSWORD_HERE';
-		//default password is 'admin.
+	//and do something else
 
 
 Example
@@ -58,6 +59,9 @@ Example
 
 	$conn = new AstMan;
 	$conn -> amiHost = '192.168.1.7';
+	$conn -> amiPort = '5038';
+	$conn -> amiUsername = 'admin';
+	$conn -> amiPassword = 'admin';
 
 	if ($conn -> Login()) {
 		$conn -> Reload();
@@ -74,23 +78,25 @@ Example
 
 	$user = '5566';
 	$type = 'webrtc';
-	$user_dir = '../conf/users'; 
+	$user_dir = './conf/users';
 		//path to users.conf
-	$ext_dir = '../conf/extensions'; 
+	$ext_dir = './conf/extensions';
 		//path to extensions.conf
-
 	$conn = new AstMan;
 	$conn -> amiHost = '192.168.1.7';
-	$conn -> AddUser($user,$type,$user_dir);
-	$conn -> AddExtension($user,$ext_dir);
 	$conn -> Login();
+	$conn -> AddUser($user,$type, $user_dir);
+	$conn -> AddExtension($user, $ext_dir);
 	$conn -> Reload();
 		//don't forget to reload Asterisk after creating user.
 	$conn -> Logout();
-	return true;
 
 License
 ----------
 
-**GNU v2**
+This software is licensed under GNU v2.
+
+Please read LICENSE for information.
+
+
   [1]: http://www.voip-info.org/wiki/view/Asterisk+manager+Example:+PHP "voip-info.org"
