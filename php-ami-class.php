@@ -2,27 +2,29 @@
 
 class AstMan {
 
-	protected $socket;
-	protected $error;
-	protected $amiHost = "10.1.1.181";
-	protected $amiPort = "5038";
-	protected $amiUsername = "admin";
-	protected $amiPassword = "admin";
+	public $socket;
+	public $error;
+	public $amiHost = "10.1.1.2";
+	public $amiPort = "5038";
+	public $amiUsername = "admin";
+	public $amiPassword = "admin";
 	
-	function AstMan() {
+	function __constructor() {
 		$this -> socket = false;
 		$this -> error = "";
 	} 
 
 	function Login() {
 		
-		$this -> socket = @fsockopen($amiHost,$amiPort, $errno, $errstr, 1); 
+		$this -> socket = @fsockopen($this -> amiHost,$this -> amiPort, $errno, $errstr, 1);
 		if (!$this -> socket) {
 			$this -> error =  "Could not connect: $errstr ($errno)";
 			return false;
 		}else{
-			stream_set_timeout($this -> socket, 1); 
-			$wrets = $this -> Query("Action: Login\r\nUserName: $amiUsername\r\nSecret: $amiPassword\r\nEvents: off\r\n\r\n"); 
+			stream_set_timeout($this -> socket, 1);
+			$amiUsername = $this -> amiUsername;
+			$amiPassword = $this -> amiPassword;
+			$wrets = $this -> Query("Action: Login\r\nUserName: $amiUsername\r\nSecret: $amiPassword\r\nEvents: off\r\n\r\n");
 			if (strpos($wrets, "Message: Authentication accepted") != false) {
 				return true;
 			}else{
@@ -36,11 +38,11 @@ class AstMan {
 	
 	function Logout() {
 		if ($this -> socket) {
-			fputs($this -> socket, "Action: Logoff\r\n\r\n"); 
-			while (!feof($this -> socket)) { 
-				$wrets .= fread($this -> socket, 8192); 
-			} 
-			fclose($this -> socket); 
+			fputs($this -> socket, "Action: Logoff\r\n\r\n");
+			while (!feof($this -> socket)) {
+				$wrets .= fread($this -> socket, 8192);
+			}
+			fclose($this -> socket);
 			$this -> socket = false;
 		}
 		return; 
@@ -52,7 +54,7 @@ class AstMan {
 			$this -> error = "No connection.";
 			return false;
 		}	
-		fputs($this -> socket, $query); 
+		fputs($this -> socket, $query);
 		do {
 			$line = fgets($this -> socket, 4096);
 			$wrets .= "<br>".$line;
@@ -70,7 +72,7 @@ class AstMan {
 			return false;
 		}
 			
-		fputs($this -> socket, $query); 
+		fputs($this -> socket, $query);
 		do
 		{
 			$line = fgets($this -> socket, 4096);
@@ -99,7 +101,7 @@ class AstMan {
 		return $wrets;
 	}
 
-	function AddUser($user,$type,$dir) {
+	function AddUser($user, $type, $dir) {
 		if ($user && $type && $dir) {
 			$file = fopen($dir, "a+");
 			switch ($type) {
@@ -119,7 +121,7 @@ class AstMan {
 		}
 	}
 
-	function AddExtension($user,$dir) {
+	function AddExtension($user, $dir) {
 		if ($user && $dir) {
 			$file = fopen($dir, "a+");
 			$str = "exten => ".$user.",1,Dial(SIP/".$user.")\n";
@@ -136,5 +138,3 @@ class AstMan {
 		return $this -> error;
 	}
 }
-
-?> 
