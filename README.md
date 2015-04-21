@@ -42,54 +42,51 @@ Functions
 Basic Usage
 ----------
 
-    include 'php-ami-class';
-    $conn = new AstMan;
-	$conn -> amiHost = 'AMI_HOST_IP_HERE';
-	$conn -> amiPort = 'AMI_PORT_HERE';
-	$conn -> amiUsername = 'AMI_USERNAME_HERE'; 
-	$conn -> amiPassword = 'AMI_PASSWORD_HERE';
-	//and do something else
+        include 'php-ami-class';
+        $conn = new AstMan;
+        $conn -> amiHost = 'AMI_HOST_IP_HERE';
+        $conn -> amiPort = 'AMI_PORT_HERE';
+        $conn -> amiUsername = 'AMI_USERNAME_HERE'; 
+        $conn -> amiPassword = 'AMI_PASSWORD_HERE';
+        //and do something else
 
 
 Example
 ----------
 **To reload Asterisk**
 
-    include 'php-ami-class.php';
-
-	$conn = new AstMan;
-	$conn -> amiHost = '192.168.1.7';
-	$conn -> amiPort = '5038';
-	$conn -> amiUsername = 'admin';
-	$conn -> amiPassword = 'admin';
-
-	if ($conn -> Login()) {
-		$conn -> Reload();
-		$conn -> Logout();
-		return true;
-	}else{
-		echo $conn -> getError();
-	    return false;
-	}
+        include 'php-ami-class.php';
+        
+        $conn = new AstMan;
+        $conn -> amiHost = '192.168.1.7';
+        $conn -> amiPort = '5038';
+        $conn -> amiUsername = 'admin';
+        $conn -> amiPassword = 'admin';
+        
+        if ($conn -> Login()) {
+            $conn -> Reload();
+            $conn -> Logout();
+            return true;
+        }else{
+            echo $conn -> getError();
+            return false;
+        }
 
 **To create user**
 
-    include 'php-ami-class.php';
-
-	$user = '5566';
-	$type = 'webrtc';
-	$user_dir = './conf/users';
-		//path to users.conf
-	$ext_dir = './conf/extensions';
-		//path to extensions.conf
-	$conn = new AstMan;
-	$conn -> amiHost = '192.168.1.7';
-	$conn -> Login();
-	$conn -> AddUser($user,$type, $user_dir);
-	$conn -> AddExtension($user, $ext_dir);
-	$conn -> Reload();
-		//don't forget to reload Asterisk after creating user.
-	$conn -> Logout();
+        include 'php-ami-class.php';
+        
+        $user = '5566';
+        $type = 'webrtc';
+        $user_dir = './conf/users'; //path to users.conf
+        $ext_dir = './conf/extensions'; //path to extensions.conf
+        $conn = new AstMan;
+        $conn -> amiHost = '192.168.1.7';
+        $conn -> Login();
+        $conn -> AddUser($user,$type, $user_dir);
+        $conn -> AddExtension($user, $ext_dir);
+        $conn -> Reload(); //don't forget to reload Asterisk after creating user.
+        $conn -> Logout();
 
 License
 ----------
