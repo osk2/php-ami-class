@@ -2,7 +2,7 @@
 
 A PHP class for Asterisk Manager Interface.
 
-This class modified from [voip-info.org][1].
+This class is modified from [voip-info.org][1].
 
 ## Functions
 
@@ -81,14 +81,14 @@ include 'php-ami-class.php';
         
 $user = '5566';
 $type = 'webrtc';
-$user_dir = './conf/users'; //path to users.conf
-$ext_dir = './conf/extensions'; //path to extensions.conf
+$user_dir = './conf/users'; // Path to users.conf
+$ext_dir = './conf/extensions'; // Path to extensions.conf
 $conn = new AstMan;
 $conn -> amiHost = '192.168.1.7';
 $conn -> Login();
 $conn -> AddUser($user,$type, $user_dir);
 $conn -> AddExtension($user, $ext_dir);
-$conn -> Reload(); //don't forget to reload Asterisk after creating user.
+$conn -> Reload(); // Don't forget to reload Asterisk after creating user.
 $conn -> Logout();
 ```
 
@@ -97,7 +97,7 @@ License
 
 This software is licensed under GNU v2.
 
-Please read LICENSE for information.
+Please read [LICENSE](LICENSE) for information.
 
 
   [1]: http://www.voip-info.org/wiki/view/Asterisk+manager+Example:+PHP "voip-info.org"
