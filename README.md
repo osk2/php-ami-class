@@ -1,13 +1,12 @@
+# php-ami-class
 
-#php-ami-class#
-----------
 A PHP class for Asterisk Manager Interface.
 
 This class modified from [voip-info.org][1].
 
-Functions
-----------
-**This class provide following functions**
+## Functions
+
+This class provide following functions:
 
  - `Login()`
 
@@ -39,8 +38,7 @@ Functions
 
  - `GetError()`
 
-Basic Usage
-----------
+## Basic Usage
 
 ```php
 include 'php-ami-class';
@@ -53,9 +51,9 @@ $conn -> amiPassword = 'AMI_PASSWORD_HERE';
 ```
 
 
-Example
-----------
-**To reload Asterisk**
+## Example
+
+### To reload Asterisk
 
 ```php
 include 'php-ami-class.php';
@@ -76,7 +74,7 @@ if ($conn -> Login()) {
 }
 ```
 
-**To create user**
+### To create user
 
 ```php
 include 'php-ami-class.php';
